@@ -36,7 +36,7 @@ void LexicalAnalyzer::analyze()
             comment_state();
         else if(_state == States::END)
         {
-            if(_lexeme_table.back().empty())
+            while(_lexeme_table.back().empty())
                 _lexeme_table.pop_back();
             return;
         }
@@ -142,6 +142,18 @@ void LexicalAnalyzer::delimiter_state()
     _state = States::START;
 }
 
+void LexicalAnalyzer::string_state()
+{
+
+}
+
+void LexicalAnalyzer::comment_state()
+{
+    while(_ch != '\n' && !is_eof(_ch))
+        readch();
+    _state = States::START;
+}
+
 void LexicalAnalyzer::readch()
 {
     if(_ch == '\n')
@@ -187,13 +199,5 @@ void LexicalAnalyzer::add_integer_to_literal_table(int64_t num)
     _literal_table.emplace_back(num);
     auto id = _literal_table.size() - 1;
     _integer_to_id[num] = id;
-}
-
-void LexicalAnalyzer::string_state() {
-
-}
-
-void LexicalAnalyzer::comment_state() {
-
 }
 
