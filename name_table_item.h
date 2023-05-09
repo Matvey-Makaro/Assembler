@@ -2,6 +2,7 @@
 
 #include <string>
 #include <vector>
+#include <utility>
 
 
 //enum class ValType : uint8_t
@@ -16,6 +17,7 @@ enum class IdentifierType
     INITIALIZED,
     UNINITIALIZED,
     LINK,
+    UNKNOWN,
 };
 
 struct NameTableItem
@@ -28,4 +30,7 @@ struct NameTableItem
 //    std::vector<std::string> str_values;
 //    ValType type = ValType::INTEGER;
 
+    explicit NameTableItem(std::string item_name) :
+    name(std::move(item_name)), size{0}, address{0}, type(IdentifierType::UNKNOWN)
+    { }
 };
