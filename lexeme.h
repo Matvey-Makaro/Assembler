@@ -85,6 +85,7 @@ enum class LexemeValue
     OPEN_SQUARE_BRACKET,
     CLOS_SQUARE_BRACKET,
     COLON,
+    COMMA,
 
     // BYTE REGISTERS
     al,
@@ -232,6 +233,7 @@ const std::unordered_set<LexemeValue> delimiters = {
         LexemeValue::OPEN_SQUARE_BRACKET,
         LexemeValue::CLOS_SQUARE_BRACKET,
         LexemeValue::COLON,
+        LexemeValue::COMMA,
 };
 
 const std::unordered_set<LexemeValue> byte_registers = {

@@ -5,7 +5,7 @@
 
 bool is_delimiter(char ch)
 {
-    return ch == '[' || ch == ']' || ch == ':';
+    return str_to_delimiters.count(std::string("") + ch);
 }
 
 bool is_eof(char ch)

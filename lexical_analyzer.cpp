@@ -135,6 +135,13 @@ void LexicalAnalyzer::num_state()
     _state = States::START;
 }
 
+void LexicalAnalyzer::delimiter_state()
+{
+    add_lexeme(str_to_delimiters.at(_ch + string("")));
+    readch();
+    _state = States::START;
+}
+
 void LexicalAnalyzer::readch()
 {
     if(_ch == '\n')
@@ -152,16 +159,20 @@ void LexicalAnalyzer::clear_buff()
     _buff = "";
 }
 
-void LexicalAnalyzer::add_lexeme(LexemeValue value, int64_t id, size_t size)
+void LexicalAnalyzer::add_lexeme(LexemeType type, LexemeValue value, int64_t id, size_t size)
 {
     auto& curr_line = _lexeme_table.back();
-    curr_line.emplace_back(get_lexeme_type(value), value, id, size, _line_num, _col_num);
+    curr_line.emplace_back(type, value, id, size, _line_num, _col_num);
+}
+
+void LexicalAnalyzer::add_lexeme(LexemeValue value, int64_t id, size_t size)
+{
+    add_lexeme(get_lexeme_type(value), value, id, size);
 }
 
 void LexicalAnalyzer::add_lexeme(LexemeType type, int64_t id, size_t size)
 {
-    auto& curr_line = _lexeme_table.back();
-    curr_line.emplace_back(type, LexemeValue::UNDEFINED, id, size, _line_num, _col_num);
+    add_lexeme(type, LexemeValue::UNDEFINED, id, size);
 }
 
 void LexicalAnalyzer::add_identifier_name(std::string name)
@@ -182,10 +193,7 @@ void LexicalAnalyzer::string_state() {
 
 }
 
-void LexicalAnalyzer::delimiter_state() {
-
-}
-
 void LexicalAnalyzer::comment_state() {
 
 }
+

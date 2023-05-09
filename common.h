@@ -140,3 +140,10 @@ const std::unordered_map<std::string, LexemeValue> key_words = {
         {"r14", LexemeValue::r14},
         {"r15", LexemeValue::r15},
 };
+
+const std::unordered_map<std::string, LexemeValue> str_to_delimiters = {
+        {"[", LexemeValue::OPEN_SQUARE_BRACKET},
+        {"]", LexemeValue::CLOS_SQUARE_BRACKET},
+        {":", LexemeValue::COLON},
+        {",", LexemeValue::COMMA},
+};

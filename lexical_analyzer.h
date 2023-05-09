@@ -44,6 +44,7 @@ private:
 
     void readch();
     void clear_buff();
+    void add_lexeme(LexemeType type, LexemeValue value, int64_t id = -1, size_t size = 0);
     void add_lexeme(LexemeValue value, int64_t id = -1, size_t size = 0);
     void add_lexeme(LexemeType type, int64_t id = -1, size_t size = 0);
     void add_identifier_name(std::string name);
@@ -62,7 +63,6 @@ private:
     uint64_t  _line_num = 0;
     uint64_t  _col_num = 0;
     std::string _buff;
-    std::string _line;
 
     States _state = States::START;
 
