@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <cstddef>
 #include <unordered_set>
+#include <ostream>
 
 enum class LexemeType
 {
@@ -164,22 +165,6 @@ enum class LexemeValue
     UNDEFINED,
 };
 
-struct Lexeme
-{
-    LexemeType type;
-    LexemeValue value;
-    int64_t id;
-    size_t size;
-    uint64_t line;
-    uint64_t col;
-
-    Lexeme(LexemeType lex_type, LexemeValue lex_value, int64_t lex_id, size_t lex_size,
-           uint64_t line_num, uint64_t col_num) :
-           type(lex_type), value(lex_value), id(lex_id), size(lex_size), line(line_num), col(col_num)
-    { }
-};
-
-
 const std::unordered_set<LexemeValue> identifiers = {
         LexemeValue::CONSTANT_IDENTIFIER,
         LexemeValue::INITIALIZED_IDENTIFIER,
@@ -327,4 +312,19 @@ const std::unordered_set<LexemeValue> qword_registers = {
         LexemeValue::r13,
         LexemeValue::r14,
         LexemeValue::r15,
+};
+
+struct Lexeme
+{
+    LexemeType type;
+    LexemeValue value;
+    int64_t id;
+    size_t size;
+    uint64_t line;
+    uint64_t col;
+
+    Lexeme(LexemeType lex_type, LexemeValue lex_value, int64_t lex_id, size_t lex_size,
+           uint64_t line_num, uint64_t col_num) :
+           type(lex_type), value(lex_value), id(lex_id), size(lex_size), line(line_num), col(col_num)
+    { }
 };
