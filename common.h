@@ -8,14 +8,19 @@
 #include <unordered_map>
 #include <string_view>
 #include <variant>
+#include <stdio.h>
 
 using NameTable = std::vector<NameTableItem>;
 using NameToID = std::unordered_map<std::string_view, uint32_t>;
 using RowToCommandSize = std::unordered_map<uint64_t, uint8_t>;
-using LiteralTable = std::vector<std::variant<std::string, int64_t>>;
+using LiteralTable = std::vector<std::variant<std::string, int64_t>>;   // TODO: Fix. All numbers in the language are limited to int64_t
 using IntegerToID =  std::unordered_map<int64_t, uint64_t>;
 using StrToID = std::unordered_map<std::string_view, uint64_t>;
 using LexemeTable = std::vector<std::vector<Lexeme>>;
+
+bool is_delimiter(char ch);
+bool is_eof(char ch);
+LexemeType get_lexeme_type(LexemeValue value);
 
 
 const std::unordered_map<std::string, LexemeValue> key_words = {
@@ -135,9 +140,3 @@ const std::unordered_map<std::string, LexemeValue> key_words = {
         {"r14", LexemeValue::r14},
         {"r15", LexemeValue::r15},
 };
-
-
-bool is_delimiter(char ch)
-{
-    return ch == '[' || ch == ']' || ch == ':';
-}
