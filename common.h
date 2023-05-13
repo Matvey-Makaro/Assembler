@@ -12,7 +12,7 @@
 
 using NameTable = std::vector<NameTableItem>;
 using NameToID = std::unordered_map<std::string_view, uint32_t>;
-using RowToCommandSize = std::unordered_map<uint64_t, uint8_t>;
+using RowToCommandSize = std::unordered_map<uint64_t, int16_t>;
 using LiteralTable = std::vector<std::variant<std::string, int64_t>>;   // TODO: Fix. All numbers in the language are limited to int64_t
 using IntegerToID =  std::unordered_map<int64_t, uint64_t>;
 using StrToID = std::unordered_map<std::string_view, uint64_t>;
@@ -22,6 +22,12 @@ bool is_delimiter(char ch);
 bool is_eof(char ch);
 LexemeType get_lexeme_type(LexemeValue value);
 char get_escape_sequences(char ch);
+NameTableItem& get_name_table_item(NameTable& name_table, const Lexeme& identifier);
+std::variant<std::string, int64_t>& get_literal(LiteralTable& literal_table, const Lexeme& literal);
+bool is_byte_register(LexemeValue lex_val);
+bool is_word_register(LexemeValue lex_val);
+bool is_dword_register(LexemeValue lex_val);
+bool is_qword_register(LexemeValue lex_val);
 
 
 const std::unordered_map<std::string, LexemeValue> key_words = {
@@ -148,3 +154,8 @@ const std::unordered_map<std::string, LexemeValue> str_to_delimiters = {
         {":", LexemeValue::COLON},
         {",", LexemeValue::COMMA},
 };
+
+constexpr int BYTE_SIZE = 1;
+constexpr int WORD_SIZE = 2;
+constexpr int DWORD_SIZE = 4;
+constexpr int QWORD_SIZE = 8;

@@ -144,7 +144,7 @@ void LexicalAnalyzer::num_state()
     if(_integer_to_id_it == end(_integer_to_id))
     {
         add_to_literal_table(num);
-        auto id = _integer_to_id.size() - 1;
+        auto id = _literal_table.size() - 1;
         add_lexeme(LexemeType::LITERAL, id);
     }
     else add_lexeme(LexemeType::LITERAL, _integer_to_id_it->second);
@@ -196,7 +196,7 @@ void LexicalAnalyzer::string_state()
     if(_str_to_id_it == end(_str_to_id))
     {
         add_to_literal_table(move(_buff));
-        auto id = _str_to_id.size() - 1;
+        auto id = _literal_table.size() - 1;
         add_lexeme(LexemeType::LITERAL, id);
     }
     else add_lexeme(LexemeType::LITERAL, _str_to_id_it->second);

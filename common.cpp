@@ -64,3 +64,34 @@ char get_escape_sequences(char ch)
     else throw runtime_error("No such escape sequence");
 }
 
+NameTableItem& get_name_table_item(NameTable& name_table, const Lexeme& identifier)
+{
+    assert(identifier.type == LexemeType::IDENTIFIER);
+    return name_table[identifier.id];
+}
+
+std::variant<std::string, int64_t>& get_literal(LiteralTable& literal_table, const Lexeme& literal)
+{
+    assert(literal.type == LexemeType::LITERAL);
+    return literal_table[literal.id];
+}
+
+bool is_byte_register(LexemeValue lex_val)
+{
+    return byte_registers.count(lex_val);
+}
+
+bool is_word_register(LexemeValue lex_val)
+{
+    return word_registers.count(lex_val);
+}
+
+bool is_dword_register(LexemeValue lex_val)
+{
+    return dword_registers.count(lex_val);
+}
+
+bool is_qword_register(LexemeValue lex_val)
+{
+    return qword_registers.count(lex_val);
+}

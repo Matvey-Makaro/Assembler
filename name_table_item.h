@@ -24,7 +24,7 @@ struct NameTableItem
 {
     std::string name;
     size_t size = 0;
-    std::vector<int64_t> int_values;
+    std::vector<int64_t> values;
     size_t address = 0;
     IdentifierType type;
 //    std::vector<std::string> str_values;

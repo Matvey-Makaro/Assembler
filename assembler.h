@@ -15,11 +15,11 @@ private:
 
     LexemeTable _lexeme_table;
     NameTable _name_table;
-    NameToID _name_to_id;
+    NameToID _name_to_id;   // TODO: needed only in the lexical analyzer
     RowToCommandSize _row_to_command_size;
     LiteralTable _literal_table;
-    IntegerToID _integer_to_id;
-    StrToID _str_to_id;
+    IntegerToID _integer_to_id; // TODO: needed only in the lexical analyzer
+    StrToID _str_to_id; // TODO: needed only in the lexical analyzer
 
 
 };

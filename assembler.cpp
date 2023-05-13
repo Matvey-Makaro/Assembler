@@ -1,9 +1,6 @@
-//
-// Created by matvey on 5/8/23.
-//
-
 #include "assembler.h"
 #include "lexical_analyzer.h"
+#include "first_pass.h"
 
 #include <utility>
 #include <iostream>
@@ -28,6 +25,10 @@ void Assembler::assemble()
     {
         cerr << ex.what() << endl;
     }
+
+    FirstPass first_pass(_lexeme_table, _name_table, _literal_table, _row_to_command_size);
+    first_pass.start();
+    auto programm_size = first_pass.get_programm_size();
 
     double delete_later = 0;
 }

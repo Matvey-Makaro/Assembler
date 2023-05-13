@@ -37,10 +37,7 @@ enum class LexemeValue
     RESW,
     RESD,
     RESQ,
-    BYTE,
-    WORD,
-    DWORD,
-    QWORD,
+    EQU,
 
     // EXECUTABLE MNEMONICS
     MOV,
@@ -76,6 +73,10 @@ enum class LexemeValue
     JP,
     SYSCALL,
     INT,
+    BYTE,
+    WORD,
+    DWORD,
+    QWORD,
 
     // LITERALS
     INT_LITERAL,
@@ -182,10 +183,7 @@ const std::unordered_set<LexemeValue> declaration_mnemonics = {
         LexemeValue::RESW,
         LexemeValue::RESD,
         LexemeValue::RESQ,
-        LexemeValue::BYTE,
-        LexemeValue::WORD,
-        LexemeValue::DWORD,
-        LexemeValue::QWORD,
+        LexemeValue::EQU,
 };
 
 const std::unordered_set<LexemeValue> executable_mnemonics = {
@@ -222,6 +220,10 @@ const std::unordered_set<LexemeValue> executable_mnemonics = {
         LexemeValue::JP,
         LexemeValue::SYSCALL,
         LexemeValue::INT,
+        LexemeValue::BYTE,
+        LexemeValue::WORD,
+        LexemeValue::DWORD,
+        LexemeValue::QWORD,
 };
 
 const std::unordered_set<LexemeValue> literal_types = {
