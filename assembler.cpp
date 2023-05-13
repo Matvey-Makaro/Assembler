@@ -6,7 +6,7 @@
 #include "lexical_analyzer.h"
 
 #include <utility>
-#include <stdio.h>
+#include <iostream>
 #include <stdexcept>
 using namespace std;
 
@@ -18,13 +18,16 @@ Assembler::Assembler(std::string fname) :
 
 void Assembler::assemble()
 {
-    FILE* file = fopen(_fname.c_str(), "r");
-    if(file == nullptr)
-        throw runtime_error("File " + _fname + " doesn't open!");
-
-    LexicalAnalyzer lex_analyzer(file, _lexeme_table, _name_table, _name_to_id, _literal_table,
-                                 _integer_to_id, _str_to_id);
-    lex_analyzer.analyze();
+    try
+    {
+        LexicalAnalyzer lex_analyzer(_fname, _lexeme_table, _name_table, _name_to_id, _literal_table,
+                                     _integer_to_id, _str_to_id);
+        lex_analyzer.analyze();
+    }
+    catch(exception& ex)
+    {
+        cerr << ex.what() << endl;
+    }
 
     double delete_later = 0;
 }

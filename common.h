@@ -21,6 +21,7 @@ using LexemeTable = std::vector<std::vector<Lexeme>>;
 bool is_delimiter(char ch);
 bool is_eof(char ch);
 LexemeType get_lexeme_type(LexemeValue value);
+char get_escape_sequences(char ch);
 
 
 const std::unordered_map<std::string, LexemeValue> key_words = {

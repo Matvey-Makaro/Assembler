@@ -224,7 +224,7 @@ const std::unordered_set<LexemeValue> executable_mnemonics = {
         LexemeValue::INT,
 };
 
-const std::unordered_set<LexemeValue> literals = {
+const std::unordered_set<LexemeValue> literal_types = {
         LexemeValue::INT_LITERAL,
         LexemeValue::STRING_LITERAL,
 };

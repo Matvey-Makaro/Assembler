@@ -9,12 +9,22 @@
 using namespace std;
 
 
-LexicalAnalyzer::LexicalAnalyzer(FILE* file, LexemeTable &lexeme_table, NameTable &name_table, NameToID &name_to_id,
+LexicalAnalyzer::LexicalAnalyzer(std::string fname, LexemeTable &lexeme_table, NameTable &name_table, NameToID &name_to_id,
                                  LiteralTable &literal_table, IntegerToID &integer_to_id, StrToID &str_to_id)
-        : _file(file), _lexeme_table(lexeme_table), _name_table(name_table), _name_to_id(name_to_id),
+        : _fname(move(fname)), _lexeme_table(lexeme_table), _name_table(name_table), _name_to_id(name_to_id),
           _literal_table(literal_table), _integer_to_id(integer_to_id), _str_to_id(str_to_id)
 {
+    _file = fopen(_fname.c_str(), "r");
+    if(_file == nullptr)
+        throw runtime_error("File " + _fname + " doesn't open!");
+
     _lexeme_table.emplace_back();
+}
+
+LexicalAnalyzer::~LexicalAnalyzer()
+{
+    if(_file)
+        fclose(_file);
 }
 
 void LexicalAnalyzer::analyze()
@@ -34,6 +44,8 @@ void LexicalAnalyzer::analyze()
             string_state();
         else if(_state == States::COMMENT)
             comment_state();
+        else if(_state == States::ERR)
+            err_state();
         else if(_state == States::END)
         {
             while(_lexeme_table.back().empty())
@@ -60,6 +72,11 @@ void LexicalAnalyzer::start_state()
         _state = States::COMMENT;
     else if(is_eof(_ch))
         _state = States::END;
+    else
+    {
+        _error_description = "unknown symbol";
+        _state = States::ERR;
+    }
 }
 
 void LexicalAnalyzer::id_or_key_word_state()
@@ -126,7 +143,7 @@ void LexicalAnalyzer::num_state()
     auto _integer_to_id_it = _integer_to_id.find(num);
     if(_integer_to_id_it == end(_integer_to_id))
     {
-        add_integer_to_literal_table(num);
+        add_to_literal_table(num);
         auto id = _integer_to_id.size() - 1;
         add_lexeme(LexemeType::LITERAL, id);
     }
@@ -144,7 +161,48 @@ void LexicalAnalyzer::delimiter_state()
 
 void LexicalAnalyzer::string_state()
 {
+    clear_buff();
+    readch();
+    while(_ch != '\"')
+    {
+        if(_ch == '\n' || is_eof(_ch))
+        {
+            _error_description = "missing terminating \" character";
+            _state = States::ERR;
+            return;
+        }
 
+        if(_ch == '\\')
+        {
+            readch();
+            try
+            {
+                _buff += get_escape_sequences(_ch);
+            }
+            catch (runtime_error& ex)
+            {
+                _error_description = ex.what();
+                _col_num--;
+                _state = States::ERR;
+                return;
+            }
+        }
+        else _buff += _ch;
+
+        readch();
+    }
+
+    auto _str_to_id_it = _str_to_id.find(_buff);
+    if(_str_to_id_it == end(_str_to_id))
+    {
+        add_to_literal_table(move(_buff));
+        auto id = _str_to_id.size() - 1;
+        add_lexeme(LexemeType::LITERAL, id);
+    }
+    else add_lexeme(LexemeType::LITERAL, _str_to_id_it->second);
+
+    readch();
+    _state = States::START;
 }
 
 void LexicalAnalyzer::comment_state()
@@ -152,6 +210,12 @@ void LexicalAnalyzer::comment_state()
     while(_ch != '\n' && !is_eof(_ch))
         readch();
     _state = States::START;
+}
+
+void LexicalAnalyzer::err_state()
+{
+    throw std::runtime_error("Lexical error: " + _error_description + " " + _fname +
+    " " + to_string(_line_num) + ":" + to_string(_col_num));
 }
 
 void LexicalAnalyzer::readch()
@@ -194,10 +258,17 @@ void LexicalAnalyzer::add_identifier_name(std::string name)
     _name_to_id[_name_table[index].name] = index;
 }
 
-void LexicalAnalyzer::add_integer_to_literal_table(int64_t num)
+void LexicalAnalyzer::add_to_literal_table(int64_t num)
 {
     _literal_table.emplace_back(num);
     auto id = _literal_table.size() - 1;
     _integer_to_id[num] = id;
+}
+
+void LexicalAnalyzer::add_to_literal_table(std::string str)
+{
+    _literal_table.push_back(move(str));
+    auto id = _literal_table.size() - 1;
+    _str_to_id[get<string>(_literal_table.back())] = id;
 }
 
