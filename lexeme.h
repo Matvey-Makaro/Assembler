@@ -77,6 +77,7 @@ enum class LexemeValue
     WORD,
     DWORD,
     QWORD,
+    CMP,
 
     // LITERALS
     INT_LITERAL,
@@ -220,6 +221,7 @@ const std::unordered_set<LexemeValue> executable_mnemonics = {
         LexemeValue::JP,
         LexemeValue::SYSCALL,
         LexemeValue::INT,
+        LexemeValue::CMP,
         LexemeValue::BYTE,
         LexemeValue::WORD,
         LexemeValue::DWORD,
@@ -351,6 +353,24 @@ const std::unordered_set<LexemeValue> additional_registers = {
         LexemeValue::r13,
         LexemeValue::r14,
         LexemeValue::r15,
+};
+
+const std::unordered_set<LexemeValue> jcc_mnemonics = {
+        LexemeValue::JE,
+        LexemeValue::JNE,
+        LexemeValue::JL,
+        LexemeValue::JLE,
+        LexemeValue::JG,
+        LexemeValue::JGE,
+        LexemeValue::JB,
+        LexemeValue::JBE,
+        LexemeValue::JA,
+        LexemeValue::JAE,
+        LexemeValue::JZ,
+        LexemeValue::JS,
+        LexemeValue::JC,
+        LexemeValue::JO,
+        LexemeValue::JP,
 };
 
 struct Lexeme

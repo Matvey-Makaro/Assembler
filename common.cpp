@@ -105,3 +105,8 @@ uint8_t get_reg_code(LexemeValue lex_val)
 {
     return reg_to_code.at(lex_val);
 }
+
+bool is_jcc(LexemeValue lex_val)
+{
+    return jcc_mnemonics.count(lex_val);
+}

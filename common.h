@@ -12,7 +12,7 @@
 
 using NameTable = std::vector<NameTableItem>;
 using NameToID = std::unordered_map<std::string, uint32_t>;
-using RowToCommandSize = std::unordered_map<uint64_t, int16_t>;
+using RowToAddress = std::unordered_map<uint64_t, int64_t>;
 using LiteralTable = std::vector<std::variant<std::string, int64_t>>;   // TODO: Fix. All numbers in the language are limited to int64_t
 using IntegerToID =  std::unordered_map<int64_t, uint64_t>;
 using StrToID = std::unordered_map<std::string, uint64_t>;
@@ -31,6 +31,7 @@ bool is_dword_register(LexemeValue lex_val);
 bool is_qword_register(LexemeValue lex_val);
 bool is_additional_register(LexemeValue lex_val);
 uint8_t get_reg_code(LexemeValue lex_val);
+bool is_jcc(LexemeValue lex_val);
 
 
 const std::unordered_map<std::string, LexemeValue> key_words = {
@@ -80,6 +81,7 @@ const std::unordered_map<std::string, LexemeValue> key_words = {
         {"jp", LexemeValue::JP},
         {"syscall", LexemeValue::SYSCALL},
         {"int", LexemeValue::INT},
+        {"cmp", LexemeValue::CMP},
 
         {"al", LexemeValue::al},
         {"ah", LexemeValue::ah},
@@ -168,6 +170,26 @@ const std::unordered_map<LexemeValue, uint8_t> reg_to_code = {
         {LexemeValue::sil, 0b110}, {LexemeValue::si, 0b110}, {LexemeValue::esi, 0b110}, {LexemeValue::rsi, 0b110}, {LexemeValue::r14b, 0b110},  {LexemeValue::r14w, 0b110},  {LexemeValue::r14d, 0b110},  {LexemeValue::r14, 0b110},
         {LexemeValue::dil, 0b110}, {LexemeValue::di, 0b111}, {LexemeValue::edi, 0b111}, {LexemeValue::rdi, 0b111}, {LexemeValue::r15b, 0b111},  {LexemeValue::r15w, 0b111},  {LexemeValue::r15d, 0b111},  {LexemeValue::r15, 0b111},
 };
+
+
+const std::unordered_map<LexemeValue, uint8_t> jcc_to_opcode
+{
+        {LexemeValue::JE, 0x84},
+        {LexemeValue::JL, 0x8C},
+        {LexemeValue::JLE, 0x8E},
+        {LexemeValue::JG, 0x8F},
+        {LexemeValue::JGE, 0x8D},
+        {LexemeValue::JB, 0x82},
+        {LexemeValue::JBE, 0x86},
+        {LexemeValue::JA, 0x87},
+        {LexemeValue::JAE, 0x83},
+        {LexemeValue::JZ, 0x84},
+        {LexemeValue::JS, 0x88},
+        {LexemeValue::JC, 0x82},
+        {LexemeValue::JO, 0x80},
+        {LexemeValue::JP, 0x8A},
+};
+
 
 constexpr int BYTE_SIZE = 1;
 constexpr int WORD_SIZE = 2;

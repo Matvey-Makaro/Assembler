@@ -62,95 +62,6 @@ void ElfFileGenerator::generate(FILE* file)
 
     for(size_t i = 0; i < _programm.size(); i++)
         fwrite(&_programm[i], sizeof(_programm[i]), 1, file);
-
-
-//    // TODO: Поменять p_filesz и p_memsz в program header.
-//    uint8_t commands[100];
-//#if 0
-//    // mov rax, 0
-//    commands[0] = 0xB8;
-//    commands[1] = 0x00;
-//    commands[2] = 0x00;
-//    commands[3] = 0x00;
-//    commands[4] = 0x00;
-//
-//    //mov rdi, 0
-//    commands[5] = 0xBF;
-//    commands[6] = 0x00;
-//    commands[7] = 0x00;
-//    commands[8] = 0x00;
-//    commands[9] = 0x00;
-//
-//    // mov rsi, 0
-//    commands[10] = 0xBE;
-//    commands[11] = 0x22;
-//    commands[12] = 0x00;
-//    commands[13] = 0x40;
-//    commands[14] = 0x00;
-//
-//    //mov rdx, 14
-//    commands[15] = 0xBA;
-//    commands[16] = 0x02;
-//    commands[17] = 0x00;
-//    commands[18] = 0x00;
-//    commands[19] = 0x00;
-//
-//    // syscall
-//    commands[20] = 0x0F;
-//    commands[21] = 0x05;
-//
-//    // mov rax, 60
-//    commands[22] = 0xB8;
-//    commands[23] = 0x3C;
-//    commands[24] = 0x00;
-//    commands[25] = 0x00;
-//    commands[26] = 0x00;
-//
-//    //mov rdi, 0
-//    commands[27] = 0xBF;
-//    commands[28] = 0x00;
-//    commands[29] = 0x00;
-//    commands[30] = 0x00;
-//    commands[31] = 0x00;
-//
-//    // syscall
-//    commands[32] = 0x0F;
-//    commands[33] = 0x05;
-//    commands[34] = 0x00;
-//    commands[35] = 0x00;
-//
-//
-//
-//    for(size_t i = 0; i < 34; i++)
-//        fwrite(&commands[i], sizeof(commands[i]), 1, file);
-//#else
-//    // mov rax, 60
-//    commands[0] = 0xB8;
-//    commands[1] = 0x3C;
-//    commands[2] = 0x00;
-//    commands[3] = 0x00;
-//    commands[4] = 0x00;
-//
-//    //mov rdi, 0
-//    commands[5] = 0xBF;
-//    commands[6] = 0x00;
-//    commands[7] = 0x00;
-//    commands[8] = 0x00;
-//    commands[9] = 0x00;
-//
-//    // syscall
-//    commands[10] = 0x0F;
-//    commands[11] = 0x05;
-//    commands[12] = 0x00;
-//    commands[13] = 0x00;
-//    commands[14] = 0x00;
-//    commands[15] = 0x00;
-//
-//
-//
-//    for(size_t i = 0; i < 14; i++)
-//        fwrite(&commands[i], sizeof(commands[i]), 1, file);
-//#endif
 }
 
 void ElfFileGenerator::fill_program_header()
@@ -165,6 +76,7 @@ void ElfFileGenerator::fill_program_header()
     // _program_header.p_memsz; is filled later.
     _program_header.p_align = 0x1000;
 
+    // TODO: Поменять p_filesz и p_memsz в program header.
 #if 1
     _program_header.p_filesz = 34;
     _program_header.p_memsz = 34;

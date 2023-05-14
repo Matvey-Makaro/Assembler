@@ -16,7 +16,7 @@ private:
     LexemeTable _lexeme_table;
     NameTable _name_table;
     NameToID _name_to_id;   // TODO: needed only in the lexical analyzer
-    RowToCommandSize _row_to_command_size;
+    RowToAddress _row_to_address;
     LiteralTable _literal_table;
     IntegerToID _integer_to_id; // TODO: needed only in the lexical analyzer
     StrToID _str_to_id; // TODO: needed only in the lexical analyzer

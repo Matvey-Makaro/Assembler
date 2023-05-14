@@ -28,12 +28,12 @@ void Assembler::assemble()
         cerr << ex.what() << endl;
     }
 
-    FirstPass first_pass(_lexeme_table, _name_table, _literal_table, _row_to_command_size, _start_address);
+    FirstPass first_pass(_lexeme_table, _name_table, _literal_table, _row_to_address, _start_address);
     first_pass.start();
     auto programm_size = first_pass.get_programm_size();
     auto start_text_address = first_pass.get_start_text_address();
 
-    SecondPass second_pass(programm_size, _lexeme_table, _name_table, _literal_table, _row_to_command_size);
+    SecondPass second_pass(programm_size, _lexeme_table, _name_table, _literal_table, _row_to_address);
     second_pass.start();
     auto programm = second_pass.get_programm();
 

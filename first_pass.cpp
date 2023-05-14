@@ -11,9 +11,9 @@
 using namespace std;
 
 FirstPass::FirstPass(LexemeTable &lexeme_table, NameTable &name_table, LiteralTable &literal_table,
-                     RowToCommandSize &row_to_command_size, size_t start_address) :
+                     RowToAddress &row_to_address, size_t start_address) :
         _lexeme_table(lexeme_table), _name_table(name_table), _literal_table(literal_table),
-        _row_to_command_size(row_to_command_size), _lex_id{0}, _address{start_address}
+        _row_to_address(row_to_address), _lex_id{0}, _address{start_address}
 { }
 
 void FirstPass::start()
@@ -47,6 +47,12 @@ void FirstPass::process_line()
         process_syscall();
     else if(start_lex.value == LexemeValue::INT)
         process_int();
+    else if(start_lex.value == LexemeValue::JMP)
+        process_jmp();
+    else if(is_jcc(start_lex.value))
+        process_jcc();
+    else if(start_lex.value == LexemeValue::CMP)
+        process_cmp();
     else assert(0);
 }
 
@@ -55,21 +61,26 @@ void FirstPass::process_decl_identifier()
     auto& identifier = get_curr_lex();
     go_to_next_lex();
     auto& lex = get_curr_lex();
-    assert(lex.type == LexemeType::DECLARATION_MNEMONIC);
+    assert(lex.type == LexemeType::DECLARATION_MNEMONIC || lex.value == LexemeValue::COLON);
     go_to_next_lex();
 
     auto& table_name_item = get_var(identifier);
 
-    switch (lex.value)
+    if(lex.value == LexemeValue::DB)
     {
-        case LexemeValue::DB:
-            table_name_item.size = BYTE_SIZE;
-            table_name_item.type = IdentifierType::INITIALIZED;
-            table_name_item.values = move(get_literals());
-            break;
-        default:
-            assert(0);  // UNREACHABLE
+        identifier.value = LexemeValue::INITIALIZED_IDENTIFIER;
+        table_name_item.size = BYTE_SIZE;
+        table_name_item.type = IdentifierType::INITIALIZED;
+        table_name_item.values = move(get_literals());
     }
+    else if(lex.value == LexemeValue::COLON)
+    {
+        identifier.value = LexemeValue::LINK;
+        table_name_item.size = QWORD_SIZE;
+        table_name_item.type = IdentifierType::LINK;
+        table_name_item.values.push_back(_address);
+    }
+
     table_name_item.address = _address;
     _address += table_name_item.size * table_name_item.values.size();
     _start_text_address = _address;
@@ -77,23 +88,44 @@ void FirstPass::process_decl_identifier()
 
 void FirstPass::process_mov()
 {
-    auto length = get_mov_length(get_curr_line());
-    _address += length;
-    _row_to_command_size[_line_num] = length;
+    process_operation([this](){
+        return get_mov_length();
+    });
 }
 
 void FirstPass::process_syscall()
 {
-    auto length = get_syscall_length();
-    _address += length;
-    _row_to_command_size[_line_num] = length;
+    process_operation([this](){
+        return get_syscall_length();
+    });
 }
 
 void FirstPass::process_int()
 {
-    auto length = get_int_length();
-    _address += length;
-    _row_to_command_size[_line_num] = length;
+    process_operation([this](){
+        return get_int_length();
+    });
+}
+
+void FirstPass::process_jmp()
+{
+    process_operation([this](){
+        return get_jmp_length();
+    });
+}
+
+void FirstPass::process_jcc()
+{
+    process_operation([this](){
+        return get_jcc_length();
+    });
+}
+
+void FirstPass::process_cmp()
+{
+    process_operation([this](){
+        return get_cmp_length();
+    });
 }
 
 void FirstPass::go_to_next_lex()
@@ -149,8 +181,9 @@ std::vector<int64_t> FirstPass::get_literals()
     return result;
 }
 
-size_t FirstPass::get_mov_length(const std::vector<Lexeme>& line)
+size_t FirstPass::get_mov_length()
 {
+    auto& line = get_curr_line();
     size_t size = 1;
     if(is_dword_register(line[1].value))
     {
@@ -171,5 +204,31 @@ size_t FirstPass::get_int_length()
 {
     return 2;
 }
+
+size_t FirstPass::get_jmp_length()
+{
+    return 5;
+}
+
+size_t FirstPass::get_jcc_length()
+{
+    return 6;
+}
+
+size_t FirstPass::get_cmp_length()
+{
+    auto& line = get_curr_line();
+    size_t size = 2;
+    if(is_dword_register(line[1].value))
+    {
+        if(line[3].type == LexemeType::LITERAL)
+            size += 4;
+    }
+
+
+    return size;
+}
+
+
 
 
