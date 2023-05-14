@@ -11,9 +11,9 @@
 using namespace std;
 
 FirstPass::FirstPass(LexemeTable &lexeme_table, NameTable &name_table, LiteralTable &literal_table,
-                     RowToCommandSize &row_to_command_size) :
+                     RowToCommandSize &row_to_command_size, size_t start_address) :
         _lexeme_table(lexeme_table), _name_table(name_table), _literal_table(literal_table),
-        _row_to_command_size(row_to_command_size), _lex_id{0}, _address{0}
+        _row_to_command_size(row_to_command_size), _lex_id{0}, _address{start_address}
 { }
 
 void FirstPass::start()
@@ -28,6 +28,11 @@ void FirstPass::start()
 size_t FirstPass::get_programm_size() const
 {
     return _address;
+}
+
+size_t FirstPass::get_start_text_address() const
+{
+    return _start_text_address;
 }
 
 void FirstPass::process_line()
@@ -67,6 +72,7 @@ void FirstPass::process_decl_identifier()
     }
     table_name_item.address = _address;
     _address += table_name_item.size * table_name_item.values.size();
+    _start_text_address = _address;
 }
 
 void FirstPass::process_mov()
@@ -165,4 +171,5 @@ size_t FirstPass::get_int_length()
 {
     return 2;
 }
+
 

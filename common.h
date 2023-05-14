@@ -11,12 +11,13 @@
 #include <stdio.h>
 
 using NameTable = std::vector<NameTableItem>;
-using NameToID = std::unordered_map<std::string_view, uint32_t>;
+using NameToID = std::unordered_map<std::string, uint32_t>;
 using RowToCommandSize = std::unordered_map<uint64_t, int16_t>;
 using LiteralTable = std::vector<std::variant<std::string, int64_t>>;   // TODO: Fix. All numbers in the language are limited to int64_t
 using IntegerToID =  std::unordered_map<int64_t, uint64_t>;
-using StrToID = std::unordered_map<std::string_view, uint64_t>;
+using StrToID = std::unordered_map<std::string, uint64_t>;
 using LexemeTable = std::vector<std::vector<Lexeme>>;
+using Programm = std::vector<uint8_t>;
 
 bool is_delimiter(char ch);
 bool is_eof(char ch);

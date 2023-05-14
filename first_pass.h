@@ -6,8 +6,8 @@
 class FirstPass
 {
 public:
-    FirstPass(LexemeTable& lexeme_table, NameTable& name_table, LiteralTable& literal_table,
-              RowToCommandSize& row_to_command_size);
+    FirstPass(LexemeTable &lexeme_table, NameTable &name_table, LiteralTable &literal_table,
+              RowToCommandSize &row_to_command_size, size_t start_address);
     ~FirstPass() = default;
 
     FirstPass(FirstPass& other) = delete;
@@ -18,6 +18,7 @@ public:
 
     void start();
     size_t get_programm_size() const;
+    size_t get_start_text_address() const;
 
 private:
     void process_line();
@@ -45,6 +46,7 @@ private:
 
     uint64_t _line_num = 0;
     int _lex_id = 0;
-    size_t _address = 0;
+    size_t _address;
+    size_t _start_text_address;
 };
 

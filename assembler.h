@@ -21,6 +21,7 @@ private:
     IntegerToID _integer_to_id; // TODO: needed only in the lexical analyzer
     StrToID _str_to_id; // TODO: needed only in the lexical analyzer
 
+    const size_t _start_address = 0x400078;
 
 };
 
