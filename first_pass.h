@@ -27,6 +27,7 @@ private:
     void process_int();
 
     void go_to_next_lex();
+    std::vector<Lexeme>& get_curr_line();
     Lexeme& get_curr_lex();
     NameTableItem& get_var(const Lexeme& lexeme);
     std::vector<int64_t> get_literals();
@@ -42,7 +43,6 @@ private:
     RowToCommandSize& _row_to_command_size;
 
 
-    std::vector<Lexeme>& _line;
     uint64_t _line_num = 0;
     int _lex_id = 0;
     size_t _address = 0;

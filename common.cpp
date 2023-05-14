@@ -95,3 +95,13 @@ bool is_qword_register(LexemeValue lex_val)
 {
     return qword_registers.count(lex_val);
 }
+
+bool is_additional_register(LexemeValue lex_val)
+{
+    return additional_registers.count(lex_val);
+}
+
+uint8_t get_reg_code(LexemeValue lex_val)
+{
+    return reg_to_code.at(lex_val);
+}

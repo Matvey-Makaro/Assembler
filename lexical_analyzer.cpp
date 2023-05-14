@@ -224,7 +224,8 @@ void LexicalAnalyzer::readch()
     {
         _line_num += 1;
         _col_num = 0;
-        _lexeme_table.emplace_back();
+        if(!_lexeme_table.back().empty())
+            _lexeme_table.emplace_back();
     }
     else _col_num++;
     _ch = fgetc(_file);

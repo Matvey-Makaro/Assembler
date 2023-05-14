@@ -28,6 +28,8 @@ bool is_byte_register(LexemeValue lex_val);
 bool is_word_register(LexemeValue lex_val);
 bool is_dword_register(LexemeValue lex_val);
 bool is_qword_register(LexemeValue lex_val);
+bool is_additional_register(LexemeValue lex_val);
+uint8_t get_reg_code(LexemeValue lex_val);
 
 
 const std::unordered_map<std::string, LexemeValue> key_words = {
@@ -153,6 +155,17 @@ const std::unordered_map<std::string, LexemeValue> str_to_delimiters = {
         {"]", LexemeValue::CLOS_SQUARE_BRACKET},
         {":", LexemeValue::COLON},
         {",", LexemeValue::COMMA},
+};
+
+const std::unordered_map<LexemeValue, uint8_t> reg_to_code = {
+        {LexemeValue::al, 0b000},  {LexemeValue::ax, 0b000}, {LexemeValue::eax, 0b000}, {LexemeValue::rax, 0b000}, {LexemeValue::r8b, 0b000},   {LexemeValue::r8w, 0b000},   {LexemeValue::r8d, 0b000},   {LexemeValue::r8, 0b000},
+        {LexemeValue::cl, 0b001},  {LexemeValue::cx, 0b001}, {LexemeValue::ecx, 0b001}, {LexemeValue::rcx, 0b001}, {LexemeValue::r9b, 0b001},   {LexemeValue::r9w, 0b001},   {LexemeValue::r9d, 0b001},   {LexemeValue::r9, 0b001},
+        {LexemeValue::dl, 0b010},  {LexemeValue::dx, 0b010}, {LexemeValue::edx, 0b010}, {LexemeValue::rdx, 0b010}, {LexemeValue::r10b, 0b010},  {LexemeValue::r10w, 0b010},  {LexemeValue::r10d, 0b010},  {LexemeValue::r10, 0b010},
+        {LexemeValue::bl, 0b011},  {LexemeValue::bx, 0b011}, {LexemeValue::ebx, 0b011}, {LexemeValue::rbx, 0b011}, {LexemeValue::r11b, 0b011},  {LexemeValue::r11w, 0b011},  {LexemeValue::r11d, 0b011},  {LexemeValue::r11, 0b011},
+        {LexemeValue::spl, 0b100}, {LexemeValue::sp, 0b100}, {LexemeValue::esp, 0b100}, {LexemeValue::rsp, 0b100}, {LexemeValue::r12b, 0b100},  {LexemeValue::r12w, 0b100},  {LexemeValue::r12d, 0b100},  {LexemeValue::r12, 0b100},
+        {LexemeValue::bpl, 0b101}, {LexemeValue::bp, 0b101}, {LexemeValue::ebp, 0b101}, {LexemeValue::rbp, 0b101}, {LexemeValue::r13b, 0b101},  {LexemeValue::r13w, 0b101},  {LexemeValue::r13d, 0b101},  {LexemeValue::r13, 0b101},
+        {LexemeValue::sil, 0b110}, {LexemeValue::si, 0b110}, {LexemeValue::esi, 0b110}, {LexemeValue::rsi, 0b110}, {LexemeValue::r14b, 0b110},  {LexemeValue::r14w, 0b110},  {LexemeValue::r14d, 0b110},  {LexemeValue::r14, 0b110},
+        {LexemeValue::dil, 0b110}, {LexemeValue::di, 0b111}, {LexemeValue::edi, 0b111}, {LexemeValue::rdi, 0b111}, {LexemeValue::r15b, 0b111},  {LexemeValue::r15w, 0b111},  {LexemeValue::r15d, 0b111},  {LexemeValue::r15, 0b111},
 };
 
 constexpr int BYTE_SIZE = 1;

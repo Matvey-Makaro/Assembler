@@ -318,6 +318,41 @@ const std::unordered_set<LexemeValue> qword_registers = {
         LexemeValue::r15,
 };
 
+const std::unordered_set<LexemeValue> additional_registers = {
+        LexemeValue::r8b,
+        LexemeValue::r9b,
+        LexemeValue::r10b,
+        LexemeValue::r11b,
+        LexemeValue::r12b,
+        LexemeValue::r13b,
+        LexemeValue::r14b,
+        LexemeValue::r15b,
+        LexemeValue::r8w,
+        LexemeValue::r9w,
+        LexemeValue::r10w,
+        LexemeValue::r11w,
+        LexemeValue::r12w,
+        LexemeValue::r13w,
+        LexemeValue::r14w,
+        LexemeValue::r15w,
+        LexemeValue::r8d,
+        LexemeValue::r9d,
+        LexemeValue::r10d,
+        LexemeValue::r11d,
+        LexemeValue::r12d,
+        LexemeValue::r13d,
+        LexemeValue::r14d,
+        LexemeValue::r15d,
+        LexemeValue::r8,
+        LexemeValue::r9,
+        LexemeValue::r10,
+        LexemeValue::r11,
+        LexemeValue::r12,
+        LexemeValue::r13,
+        LexemeValue::r14,
+        LexemeValue::r15,
+};
+
 struct Lexeme
 {
     LexemeType type;

@@ -13,17 +13,15 @@ using namespace std;
 FirstPass::FirstPass(LexemeTable &lexeme_table, NameTable &name_table, LiteralTable &literal_table,
                      RowToCommandSize &row_to_command_size) :
         _lexeme_table(lexeme_table), _name_table(name_table), _literal_table(literal_table),
-        _row_to_command_size(row_to_command_size), _line(lexeme_table[0]), _lex_id{0}, _address{0}
+        _row_to_command_size(row_to_command_size), _lex_id{0}, _address{0}
 { }
 
 void FirstPass::start()
 {
-    for(auto& line : _lexeme_table)
+    for(_line_num = 0; _line_num < _lexeme_table.size(); _line_num++)
     {
-        _line = line;
         _lex_id = 0;
         process_line();
-        _line_num++;
     }
 }
 
@@ -73,7 +71,7 @@ void FirstPass::process_decl_identifier()
 
 void FirstPass::process_mov()
 {
-    auto length = get_mov_length(_line);
+    auto length = get_mov_length(get_curr_line());
     _address += length;
     _row_to_command_size[_line_num] = length;
 }
@@ -97,9 +95,14 @@ void FirstPass::go_to_next_lex()
     _lex_id++;
 }
 
+std::vector<Lexeme> &FirstPass::get_curr_line()
+{
+    return _lexeme_table[_line_num];
+}
+
 Lexeme &FirstPass::get_curr_lex()
 {
-    return _line[_lex_id];
+    return get_curr_line()[_lex_id];
 }
 
 NameTableItem &FirstPass::get_var(const Lexeme &lexeme)
@@ -110,7 +113,8 @@ NameTableItem &FirstPass::get_var(const Lexeme &lexeme)
 std::vector<int64_t> FirstPass::get_literals()
 {
     std::vector<int64_t> result;
-    while(_lex_id < _line.size())
+    auto& line = get_curr_line();
+    while(_lex_id < line.size())
     {
         auto& literal = get_curr_lex();
         assert(literal.type == LexemeType::LITERAL);
@@ -128,7 +132,7 @@ std::vector<int64_t> FirstPass::get_literals()
 
         go_to_next_lex();
 
-        if(_lex_id < _line.size())
+        if(_lex_id < line.size())
         {
             assert(get_curr_lex().value == LexemeValue::COMMA);
             go_to_next_lex();

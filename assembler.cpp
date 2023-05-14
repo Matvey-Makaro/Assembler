@@ -1,6 +1,7 @@
 #include "assembler.h"
 #include "lexical_analyzer.h"
 #include "first_pass.h"
+#include "second_pass.h"
 
 #include <utility>
 #include <iostream>
@@ -29,6 +30,11 @@ void Assembler::assemble()
     FirstPass first_pass(_lexeme_table, _name_table, _literal_table, _row_to_command_size);
     first_pass.start();
     auto programm_size = first_pass.get_programm_size();
+
+    SecondPass second_pass(programm_size, _lexeme_table, _name_table, _literal_table, _row_to_command_size);
+    second_pass.start();
+    auto programm = second_pass.get_programm();
+
 
     double delete_later = 0;
 }
