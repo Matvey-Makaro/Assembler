@@ -9,8 +9,8 @@
 #include <stdexcept>
 using namespace std;
 
-Assembler::Assembler(std::string fname) :
-    _fname(move(fname))
+Assembler::Assembler(std::string in_fname, std::string out_fname) :
+        _in_fname(move(in_fname)), _out_fname(move(out_fname))
 {
 
 }
@@ -19,7 +19,7 @@ void Assembler::assemble()
 {
     try
     {
-        LexicalAnalyzer lex_analyzer(_fname, _lexeme_table, _name_table, _name_to_id, _literal_table,
+        LexicalAnalyzer lex_analyzer(_in_fname, _lexeme_table, _name_table, _name_to_id, _literal_table,
                                      _integer_to_id, _str_to_id);
         lex_analyzer.analyze();
     }
@@ -37,13 +37,14 @@ void Assembler::assemble()
     second_pass.start();
     auto programm = second_pass.get_programm();
 
-    auto file = fopen("result", "w");
+    auto file = fopen(_out_fname.c_str(), "w");
     if(file == nullptr)
-        throw runtime_error("File " + std::string("result") + " doesn't open!");
+        throw runtime_error("File " + _out_fname + " doesn't open!");
 
     ElfFileGenerator generator(programm, _start_address, start_text_address);
     generator.generate(file);
 
     fclose(file);
+    system(("chmod +x " + _out_fname).c_str());
     double delete_later = 0;
 }

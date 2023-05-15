@@ -7,11 +7,12 @@
 class Assembler
 {
 public:
-    explicit Assembler(std::string fname);
+    explicit Assembler(std::string in_fname, std::string out_fname);
 
     void assemble();
 private:
-    std::string _fname;
+    std::string _in_fname;
+    std::string _out_fname;
 
     LexemeTable _lexeme_table;
     NameTable _name_table;
