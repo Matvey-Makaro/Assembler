@@ -48,6 +48,8 @@ void SecondPass::process_line()
         process_cmp();
     else if(start_lex.value == LexemeValue::ADD)
         process_add();
+    else if(start_lex.value == LexemeValue::SUB)
+        process_sub();
     else assert(0);
 
 }
@@ -213,6 +215,35 @@ void SecondPass::process_add()
             uint8_t opcode = 0x81;
             _programm.push_back(opcode);
             uint8_t mod_r_m = 0b11000000 | reg_to_code.at(line[1].value);
+            _programm.push_back(mod_r_m);
+
+            uint32_t val = 0;
+            if(line[3].type == LexemeType::IDENTIFIER)
+                val = get_var(line[3]).address;
+            else val =  std::get<int64_t>(get_literal(_literal_table, line[3]));
+
+            add_num_to_programm(val);
+        }
+    }
+}
+
+void SecondPass::process_sub()
+{
+    auto& line = get_curr_line();
+    assert(line[0].value == LexemeValue::SUB);
+
+    if(line[3].type == LexemeType::IDENTIFIER || line[3].type == LexemeType::LITERAL)
+    {
+        if(is_dword_register(line[1].value))
+        {
+            if(is_additional_register(line[1].value))
+            {
+                uint8_t rex_prefix = 0b01000001;
+                _programm.push_back(rex_prefix);
+            }
+            uint8_t opcode = 0x81;
+            _programm.push_back(opcode);
+            uint8_t mod_r_m = 0b11101000 | reg_to_code.at(line[1].value);
             _programm.push_back(mod_r_m);
 
             uint32_t val = 0;

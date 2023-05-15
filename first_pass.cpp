@@ -55,6 +55,8 @@ void FirstPass::process_line()
         process_cmp();
     else if(start_lex.value == LexemeValue::ADD)
         process_add();
+    else if(start_lex.value == LexemeValue::SUB)
+        process_sub();
     else assert(0);
 }
 
@@ -136,6 +138,13 @@ void FirstPass::process_add()
 {
     process_operation([this](){
         return get_add_length();
+    });
+}
+
+void FirstPass::process_sub()
+{
+    process_operation([this](){
+        return get_sub_length();
     });
 }
 
@@ -253,6 +262,21 @@ size_t FirstPass::get_add_length()
 
     return size;
 }
+
+size_t FirstPass::get_sub_length()
+{
+    auto& line = get_curr_line();
+    size_t size = 2;
+    if(is_dword_register(line[1].value))
+    {
+        if(line[3].type == LexemeType::LITERAL)
+            size += 4;
+    }
+
+
+    return size;
+}
+
 
 
 

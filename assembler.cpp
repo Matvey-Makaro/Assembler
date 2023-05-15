@@ -17,16 +17,9 @@ Assembler::Assembler(std::string in_fname, std::string out_fname) :
 
 void Assembler::assemble()
 {
-    try
-    {
-        LexicalAnalyzer lex_analyzer(_in_fname, _lexeme_table, _name_table, _name_to_id, _literal_table,
-                                     _integer_to_id, _str_to_id);
-        lex_analyzer.analyze();
-    }
-    catch(exception& ex)
-    {
-        cerr << ex.what() << endl;
-    }
+    LexicalAnalyzer lex_analyzer(_in_fname, _lexeme_table, _name_table, _name_to_id, _literal_table,
+                                 _integer_to_id, _str_to_id);
+    lex_analyzer.analyze();
 
     FirstPass first_pass(_lexeme_table, _name_table, _literal_table, _row_to_address, _start_address);
     first_pass.start();

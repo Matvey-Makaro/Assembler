@@ -38,6 +38,7 @@ private:
     void process_jcc(); // jcc - jump id condition is met(ja, jg, jge, ...)
     void process_cmp();
     void process_add();
+    void process_sub();
 
     void go_to_next_lex();
     std::vector<Lexeme>& get_curr_line();
@@ -52,6 +53,7 @@ private:
     size_t get_jcc_length();
     size_t get_cmp_length();
     size_t get_add_length();
+    size_t get_sub_length();
 
 private:
     LexemeTable& _lexeme_table;

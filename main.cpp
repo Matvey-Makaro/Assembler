@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <stdexcept>
 using namespace std;
 
 int main(int argc, char** argv)
@@ -12,11 +13,15 @@ int main(int argc, char** argv)
         return -1;
     }
 
-//    std::string in_fname = "test.asm";
-//    std::string in_fname = "hello.asm";
-//    std::string in_fname = "read_write.asm";
-    std::string in_fname(argv[1]);
-    std::string out_fname(argv[2]);
-    Assembler assembler(in_fname, out_fname);
-    assembler.assemble();
+    string in_fname(argv[1]);
+    string out_fname(argv[2]);
+    try
+    {
+        Assembler assembler(in_fname, out_fname);
+        assembler.assemble();
+    }
+    catch(std::exception& ex)
+    {
+        cerr << ex.what() << endl;
+    }
 }
