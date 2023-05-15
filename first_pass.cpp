@@ -79,6 +79,8 @@ void FirstPass::process_decl_identifier()
         table_name_item.size = QWORD_SIZE;
         table_name_item.type = IdentifierType::LINK;
         table_name_item.values.push_back(_address);
+        table_name_item.address = _address;
+        return;
     }
 
     table_name_item.address = _address;

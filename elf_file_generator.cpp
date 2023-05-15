@@ -78,7 +78,7 @@ void ElfFileGenerator::fill_program_header()
 
     // TODO: Поменять p_filesz и p_memsz в program header.
 #if 1
-    _program_header.p_filesz = 34;
-    _program_header.p_memsz = 34;
+    _program_header.p_filesz = 134;
+    _program_header.p_memsz = 134;
 #endif
 }
