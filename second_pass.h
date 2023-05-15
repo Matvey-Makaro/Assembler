@@ -42,6 +42,7 @@ private:
     void process_jmp();
     void process_jcc();
     void process_cmp();
+    void process_add();
 
 private:
     LexemeTable& _lexeme_table;

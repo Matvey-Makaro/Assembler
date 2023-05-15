@@ -53,6 +53,8 @@ void FirstPass::process_line()
         process_jcc();
     else if(start_lex.value == LexemeValue::CMP)
         process_cmp();
+    else if(start_lex.value == LexemeValue::ADD)
+        process_add();
     else assert(0);
 }
 
@@ -127,6 +129,13 @@ void FirstPass::process_cmp()
 {
     process_operation([this](){
         return get_cmp_length();
+    });
+}
+
+void FirstPass::process_add()
+{
+    process_operation([this](){
+        return get_add_length();
     });
 }
 
@@ -218,6 +227,20 @@ size_t FirstPass::get_jcc_length()
 }
 
 size_t FirstPass::get_cmp_length()
+{
+    auto& line = get_curr_line();
+    size_t size = 2;
+    if(is_dword_register(line[1].value))
+    {
+        if(line[3].type == LexemeType::LITERAL)
+            size += 4;
+    }
+
+
+    return size;
+}
+
+size_t FirstPass::get_add_length()
 {
     auto& line = get_curr_line();
     size_t size = 2;
